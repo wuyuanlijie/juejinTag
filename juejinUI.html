@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>掘金标签</title>
+  <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.2.0/css/bootstrap.min.css">
+  <style >
+  * {
+      list-style: none;
+      text-decoration: none;
+    }
+  /*头部*/
+  /*.container{
+    margin: 0px 100px;
+  }*/
+  .list-header {
+    height: 50px;
+    width: auto;
+    color: #909090;
+    position: relative;
+    left: 50px;
+    top: 10px;
+  }
+  .list-header input{
+    position: relative;
+    top: 7px;
+    left: 30px;
+    height: 30px;
+    width:140px;
+  }
+  .list-header ul {
+    margin: 0;
+    padding: 0;
+    font-size: 18px;
+  }
+  .list-header ul li {
+    float: left;
+    padding: 10px;
+  }
+  .list-header ul li a{
+     text-decoration: none;
+     color: #909090;
+  }
+
+  .list-header ul li a:hover {
+     display: inline-block;
+     color: #007FFF;
+  }
+  .nav-list .active {
+    color:#007FFF;
+  }
+
+
+  /*内容部分*/
+  .tag-list {
+    width: 100%;
+  }
+  .item {
+    display: inline-block;
+    border: 1px solid #f1f1f1;
+    text-align: center;
+    width: 22%;
+    padding: 25px 0px;
+    margin: 8px 10px;
+
+  }
+  .item img {
+    height: 32px;
+    width: 32px;
+  }
+  .info-box a {
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .info-box .thumb {
+    padding: 5px 0;
+  }
+  .info-box .title {
+    font-size: 19px;
+    color: #333333;
+  }
+  .info-box .meta-box {
+    display: flex;
+    justify-content: center;
+    color: #909090;
+    font-size: 14px;
+  }
+  .info-box .meta-box .meta {
+    padding:2px 5px;
+  }
+  .action-box {
+     padding: 10px;
+     text-align: center;
+  }
+  .action-box .subscribe-btn {
+    box-sizing: border-box;
+    font-size: 14px;
+    height: 30px;
+    width: 57px;
+    color: #37C700;
+    border: 1px solid #37C700;
+    background: #fff;
+  }
+  .action-box .followed {
+    box-sizing: border-box;
+    font-size: 15px;
+    color: #fff;
+    height: 30px;
+    width: 74px;
+    border: 1px solid #37C700;
+    background: #37C700;
+  }
+  @media(max-width:767px) {
+    .item {
+      width: 45%;
+      padding: 25px 0px;
+      margin: 8px 5px;
+    }
+  }
+
+
+
+
+
+
+
+  </style>
+
+</head>
+<body>
+  <div class="container">
+    <header class="list-header">
+      <ul class="nav-list">
+        <li class="nav-item hot ">
+          <a href="javascript:; " data-type="hot" class="active">最热</a>
+        </li>
+        <li class="nav-item new">
+          <a href="javascript:;" data-type="new" >最新</a>
+        </li>
+        <input type="text" class="form-control"  placeholder="搜索标签" / >
+      </ul>
+    </header>
+    <ul class="tag-list">
+
+    </ul>
+
+  </div>
+
+
+  <script src="http://cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+  <script type="text/javascript">
+    const baseURL = 'http://easy-mock.com/mock/59759985a1d30433d83b7fdc/subscribe/';
+    //获取对应的url
+    function getTagData (type) {
+      return `${baseURL}${type}`;
+    }
+    //便签元素的显示
+    function showTags(tags) {
+      return tags.map(tag => {
+        if(tag.isFollow){
+          return `
+          <li class="item ">
+            <div class="tag">
+              <div class="info-box">
+                <a href="javascript:;">
+                  <div class="thumb">
+                    <img src="${tag.avator}" alt="图片">
+                  </div>
+                  <div class="title">${tag.name}</div>
+                </a>
+                <div class="meta-box">
+                  <div class="meta subscribe">${tag.subscribe} 关注</div>
+                  <div class="meta acticle">${tag.articles} 文字</div>
+                </div>
+              </div>
+              <div class="action-box">
+                <button class="subscribe-btn followed" type="button" name="button" >已选择</button>
+              </div>
+            </div>
+          </li>
+          `
+        } else {
+          return `
+          <li class="item ">
+            <div class="tag">
+              <div class="info-box">
+                <a href="javascript:;">
+                  <div class="thumb">
+                    <img src="${tag.avator}" alt="图片">
+                  </div>
+                  <div class="title">${tag.name}</div>
+                </a>
+                <div class="meta-box">
+                  <div class="meta subscribe">${tag.subscribe} 关注</div>
+                  <div class="meta acticle">${tag.articles} 文字</div>
+                </div>
+              </div>
+              <div class="action-box">
+                <button class="subscribe-btn" type="button" name="button" >选择</button>
+              </div>
+            </div>
+          </li>
+          `
+        }
+
+      })
+    }
+    //加载数据
+    function loadTags (type) {
+       let tagURL = getTagData(type);
+       fetch(tagURL).then(blob => blob.json()).then(data => {
+         document.querySelector('.tag-list').innerHTML = showTags(data).join('');
+
+      //   var btnAll = document.querySelectorAll('.subscribe-btn');
+      //    btnAll.forEach(btn => {
+      //       let isFollow = btn.innerHTML;
+      //       console.log(btn)
+      //       isFollow?btn.classList.add('followed'):'';
+      //       isFollow?btn.innerHTML = '已选择': '选择';
+       //
+      //    })
+        })
+
+    }
+    loadTags('hot');
+    document.querySelectorAll('.nav-list li a').forEach(item => {
+      item.addEventListener('click', function() {
+        loadTags(this.dataset.type);
+        document.querySelectorAll('.nav-list li a').forEach(item => {
+          item.classList.remove('active');
+        })
+        this.classList.add('active');
+      });
+    })
+
+
+
+  </script>
+
+
+</body>
+</html>
